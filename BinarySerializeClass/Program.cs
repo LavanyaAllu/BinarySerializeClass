@@ -10,27 +10,31 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace BinarySerializeClass
 {
+    [Serializable]
+    class DobClass : IDeserializationCallback
+    {
+        public int BirthYear { get; set; }
+        public int PresentYear { get; set; }
+
+
+        public void OnDeserialization(object sender)
+        {
+            Console.WriteLine($"The Present Age is:{PresentYear - BirthYear}");
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter the DateOfBirth in the following format 21 nov 1999");
-            string s = Console.ReadLine();
-
-            DateTime dob = Convert.ToDateTime(s);   
-            DateTime PresentYear = DateTime.Now;
-            TimeSpan ts = PresentYear - dob;
-            DateTime Age = DateTime.MinValue.AddDays(ts.Days);
-            
-            FileStream fs = new FileStream(@"CalulateAge.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
-            BinaryFormatter bf = new BinaryFormatter();
-            bf.Serialize(fs, Age.Year - 1);
-
+            DobClass d = new DobClass();
+            d.PresentYear = DateTime.Now.Year;
+            Console.WriteLine("Enter Your Year of Birth:");
+            d.BirthYear = Convert.ToInt32(Console.ReadLine());
+            FileStream fs = new FileStream(@"E:\DateOfBirth.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
+            BinaryFormatter b = new BinaryFormatter();
+            b.Serialize(fs, d);
             fs.Seek(0, SeekOrigin.Begin);
-
-            int res = (int)bf.Deserialize(fs); //unboxing
-            Console.WriteLine("Age is: " + res);
-            Console.WriteLine(PresentYear);
+            DobClass d1 = (DobClass)b.Deserialize(fs);
         }
     }
 }
