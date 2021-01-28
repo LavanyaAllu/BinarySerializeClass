@@ -28,6 +28,7 @@ namespace BinarySerializeClass
         {
             DobClass d = new DobClass();
             d.PresentYear = DateTime.Now.Year;
+            Console.WriteLine(DateTime.Now);
             Console.WriteLine("Enter Your Year of Birth:");
             d.BirthYear = Convert.ToInt32(Console.ReadLine());
             FileStream fs = new FileStream(@"E:\DateOfBirth.txt", FileMode.OpenOrCreate, FileAccess.ReadWrite);
